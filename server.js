@@ -29,9 +29,18 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 
-// API Health Check
+// Serve static frontend (Static files like CSS, JS, Images)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Smart Home Route
 app.get('/', (req, res) => {
-  res.json({ message: 'Pretex Premium Textiles API is running...' });
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  // If index.html exists (locally), serve it. Otherwise (on Render), show JSON message.
+  if (require('fs').existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.json({ message: 'Pretex Premium Textiles API is running...' });
+  }
 });
 
 // Error handling
